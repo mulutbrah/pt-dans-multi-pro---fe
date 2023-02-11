@@ -1,6 +1,7 @@
 import moment from "moment";
 
 import { Link } from "react-router-dom";
+
 import PropTypes from "prop-types";
 
 import { capitalize } from "lodash";
@@ -10,7 +11,7 @@ import "./style.scss";
 const CardLong = ({ data }) => {
   return (
     <div className="card-long">
-      <Link to={`/anime/${data.id}`}>
+      <Link to={`/jobs/${data.id}`}>
         <div className="flex items-center justify-between px-2 py-2">
           <div className="card-long__left flex items-center">
             <div className="ml-3">

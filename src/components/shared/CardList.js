@@ -4,7 +4,6 @@ import CardLong from "./Card/Long";
 import SkeletonCard from "./Skeleton/Card";
 
 const CardList = ({ title = "", list = [], loading = false }) => {
-  console.log("11 ", list);
   return (
     <div className="mt-5">
       {title !== "" && (
