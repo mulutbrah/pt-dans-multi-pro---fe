@@ -1,5 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
-import { debounce } from "lodash";
+import { useEffect, useState } from "react";
 
 import Container from "../components/shared/Container";
 import FormInput from "../components/shared/Form/Input";
@@ -11,6 +10,7 @@ import JobApi from "../services/job";
 const Home = () => {
   const [inputTitle, setInputTitle] = useState("");
   const [inputLocation, setInputLocation] = useState("");
+  const [isFullTime, setIsFullTime] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
@@ -21,6 +21,10 @@ const Home = () => {
 
   const handleChangeInputLocation = (value) => {
     setInputLocation(value);
+  };
+
+  const handleIsFullTime = (value) => {
+    setIsFullTime(value);
   };
 
   const getJobs = async (params) => {
@@ -43,10 +47,13 @@ const Home = () => {
     }
   };
 
+  console.log("isFullTime ", isFullTime);
+
   const handleSearch = () => {
     const body = {
       description: inputTitle,
       location: inputLocation,
+      full_time: isFullTime,
     };
 
     getJobs(body);
@@ -80,8 +87,13 @@ const Home = () => {
         />
 
         <label class="label mx-10">
-          <input type="checkbox" name="checkbox" value="full_time" /> Full Time
-          Only
+          <input
+            type="checkbox"
+            name="checkbox"
+            value={isFullTime}
+            onChange={(e) => handleIsFullTime(e.target.checked)}
+          />{" "}
+          Full Time Only
         </label>
 
         <button
