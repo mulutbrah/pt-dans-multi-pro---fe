@@ -3,7 +3,7 @@ import React from "react";
 import "./style.scss";
 
 const SkeletonCard = () => {
-  return <div className="skeleton-card" />;
+  return <div className="w-full keleton-card" />;
 };
 
 export default SkeletonCard;

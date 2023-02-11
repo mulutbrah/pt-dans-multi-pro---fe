@@ -17,10 +17,6 @@ const CardList = ({ title = "", list = [], loading = false }) => {
       {loading ? (
         <div className="grid grid-cols-5 gap-4">
           <SkeletonCard />
-          <SkeletonCard />
-          <SkeletonCard />
-          <SkeletonCard />
-          <SkeletonCard />
         </div>
       ) : (
         <div>

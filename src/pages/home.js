@@ -14,6 +14,11 @@ const Home = () => {
 
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
+  const [page, setPage] = useState(1);
+
+  const handlePagination = () => {
+    setPage((prevState) => prevState + 1);
+  };
 
   const handleChangeInputTitle = (value) => {
     setInputTitle(value);
@@ -27,18 +32,28 @@ const Home = () => {
     setIsFullTime(value);
   };
 
-  const getJobs = async (params) => {
+  const getJobs = async (params, isConcatJobList = false) => {
     try {
       setLoading(true);
+
+      if (!isConcatJobList) {
+        params.page = 1;
+      }
 
       const { data } = await JobApi.get({
         ...params,
       });
       const results = data.content;
 
-      setLoading(true);
+      const resultNoNull = results.filter((x) => x);
 
-      setList(results);
+      if (isConcatJobList) {
+        setList((prevState) => prevState.concat(resultNoNull));
+
+        return;
+      }
+
+      setList(resultNoNull);
     } catch (err) {
       console.log("rerr ", err);
       //
@@ -47,17 +62,24 @@ const Home = () => {
     }
   };
 
-  console.log("isFullTime ", isFullTime);
-
-  const handleSearch = () => {
+  const handleJobsRequest = (concat = false) => {
     const body = {
       description: inputTitle,
       location: inputLocation,
       full_time: isFullTime,
+      page,
     };
 
-    getJobs(body);
+    if (!body.page) delete body.page;
+
+    getJobs(body, concat);
   };
+
+  useEffect(() => {
+    if (page > 1) {
+      handleJobsRequest(true);
+    }
+  }, [page]);
 
   useEffect(() => {
     const DEFAULT_DATA = {
@@ -68,7 +90,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Container>
+    <Container className="my-10">
       <div className="flex">
         <FormInput
           className="w-full"
@@ -86,7 +108,7 @@ const Home = () => {
           handleChange={handleChangeInputLocation}
         />
 
-        <label class="label mx-10">
+        <label className="label mx-10">
           <input
             type="checkbox"
             name="checkbox"
@@ -97,8 +119,9 @@ const Home = () => {
         </label>
 
         <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => {
-            handleSearch();
+            handleJobsRequest();
           }}
         >
           Search
@@ -106,6 +129,15 @@ const Home = () => {
       </div>
 
       <CardList title="Job List" list={list} loading={loading} />
+
+      <button
+        className="w-full mt-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={() => {
+          handlePagination();
+        }}
+      >
+        View More
+      </button>
     </Container>
   );
 };
